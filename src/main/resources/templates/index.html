@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 50px;
+        }
+        .url-card {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .result-section {
+            margin-top: 20px;
+            display: none;
+        }
+        .copy-btn {
+            cursor: pointer;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #0d6efd;
+        }
+        .alert {
+            display: none;
+            margin-top: 15px;
+        }
+        .user-info {
+            font-size: 12px;
+            color: #6c757d;
+            text-align: right;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="url-card">
+        <div class="user-info">
+            <div>Current Date: 2025-03-24 20:02:41</div>
+            <div>User: Vin-it-9</div>
+        </div>
+
+        <div class="header">
+            <h1>URL Shortener</h1>
+            <p class="text-muted">Make your long URLs short and trackable</p>
+        </div>
+
+        <form id="shortenForm">
+            <div class="mb-3">
+                <label for="originalUrl" class="form-label">Enter your long URL</label>
+                <input type="url" class="form-control" id="originalUrl" name="url"
+                       placeholder="https://example.com/your/very/long/url" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="expirationDays" class="form-label">Expiration (days)</label>
+                <input type="number" class="form-control" id="expirationDays" name="expirationDays"
+                       value="30" min="1" max="365">
+            </div>
+
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Shorten URL</button>
+            </div>
+        </form>
+
+        <div class="alert alert-danger" id="errorAlert" role="alert"></div>
+
+        <div class="result-section" id="resultSection">
+            <hr>
+            <h5>Your shortened URL:</h5>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="shortenedUrl" readonly>
+                <button class="btn btn-outline-secondary copy-btn" type="button" id="copyButton">
+                    Copy
+                </button>
+            </div>
+
+            <div class="text-center mt-3">
+                <!-- Form for stats navigation -->
+                <form id="statsForm" action="/state.html" method="get">
+                    <input type="hidden" id="statsShortCode" name="code" value="">
+                    <button type="submit" class="btn btn-sm btn-outline-info">View Statistics</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('shortenForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const originalUrl = document.getElementById('originalUrl').value;
+        const expirationDays = document.getElementById('expirationDays').value;
+
+        // Hide any previous results or errors
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('errorAlert').style.display = 'none';
+
+        try {
+            const response = await fetch('/shorten', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    url: originalUrl,
+                    expirationDays: parseInt(expirationDays)
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const shortenedUrlField = document.getElementById('shortenedUrl');
+                shortenedUrlField.value = data.shortenedUrl;
+
+                // Extract short code for stats form
+                const shortCode = data.shortenedUrl.split('/').pop();
+                document.getElementById('statsShortCode').value = shortCode;
+
+                console.log('Generated stats code:', shortCode);
+
+                // Show results section
+                document.getElementById('resultSection').style.display = 'block';
+            } else {
+                const errorText = await response.text();
+                document.getElementById('errorAlert').textContent = 'Error: ' + errorText;
+                document.getElementById('errorAlert').style.display = 'block';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('errorAlert').textContent = 'An error occurred while shortening the URL';
+            document.getElementById('errorAlert').style.display = 'block';
+        }
+    });
+
+    document.getElementById('copyButton').addEventListener('click', function() {
+        const shortenedUrlField = document.getElementById('shortenedUrl');
+        shortenedUrlField.select();
+        document.execCommand('copy');
+
+        // Change button text temporarily
+        const copyButton = this;
+        const originalText = copyButton.textContent;
+        copyButton.textContent = 'Copied!';
+        setTimeout(() => {
+            copyButton.textContent = originalText;
+        }, 2000);
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
