@@ -1,98 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Shortener</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 50px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
         }
-        .url-card {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
-        .result-section {
-            margin-top: 20px;
-            display: none;
-        }
-        .copy-btn {
-            cursor: pointer;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: #0d6efd;
-        }
-        .alert {
-            display: none;
-            margin-top: 15px;
-        }
-        .user-info {
-            font-size: 12px;
-            color: #6c757d;
-            text-align: right;
-            margin-bottom: 20px;
-        }
-    </style>
+    </script>
 </head>
-<body>
-<div class="container">
-    <div class="url-card">
-        <div class="user-info">
-            <div>Current Date: 2025-03-24 20:02:41</div>
-            <div>User: Vin-it-9</div>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+        <!-- Header -->
+        <div class="p-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">URL Shortener</h1>
+            </div>
+            <p class="mt-2 text-primary-100">Transform your long URLs into concise, trackable links</p>
         </div>
 
-        <div class="header">
-            <h1>URL Shortener</h1>
-            <p class="text-muted">Make your long URLs short and trackable</p>
-        </div>
+        <div class="p-6">
+            <!-- Form -->
+            <form id="shortenForm" class="space-y-4">
+                <div>
+                    <label for="originalUrl" class="block text-sm font-medium text-gray-700 mb-1">Enter your long URL</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                            </svg>
+                        </div>
+                        <input
+                                type="url"
+                                id="originalUrl"
+                                name="url"
+                                class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-primary-500 focus:border-primary-500 shadow-sm"
+                                placeholder="https://example.com/your/very/long/url"
+                                required
+                        >
+                    </div>
+                </div>
 
-        <form id="shortenForm">
-            <div class="mb-3">
-                <label for="originalUrl" class="form-label">Enter your long URL</label>
-                <input type="url" class="form-control" id="originalUrl" name="url"
-                       placeholder="https://example.com/your/very/long/url" required>
-            </div>
+                <div>
+                    <label for="expirationDays" class="block text-sm font-medium text-gray-700 mb-1">Expiration (days)</label>
+                    <div class="flex items-center">
+                        <input
+                                type="range"
+                                id="expirationDays"
+                                name="expirationDays"
+                                min="1"
+                                max="365"
+                                value="30"
+                                class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                oninput="expirationOutput.value = this.value"
+                        >
+                        <output id="expirationOutput" class="ml-3 w-12 text-center text-gray-700">30</output>
+                    </div>
+                </div>
 
-            <div class="mb-3">
-                <label for="expirationDays" class="form-label">Expiration (days)</label>
-                <input type="number" class="form-control" id="expirationDays" name="expirationDays"
-                       value="30" min="1" max="365">
-            </div>
-
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">Shorten URL</button>
-            </div>
-        </form>
-
-        <div class="alert alert-danger" id="errorAlert" role="alert"></div>
-
-        <div class="result-section" id="resultSection">
-            <hr>
-            <h5>Your shortened URL:</h5>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" id="shortenedUrl" readonly>
-                <button class="btn btn-outline-secondary copy-btn" type="button" id="copyButton">
-                    Copy
+                <button
+                        type="submit"
+                        class="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-medium rounded-lg transition duration-200 flex items-center justify-center"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Shorten URL
                 </button>
-            </div>
+            </form>
 
-            <div class="text-center mt-3">
-                <!-- Form for stats navigation -->
-                <form id="statsForm" action="/state.html" method="get">
-                    <input type="hidden" id="statsShortCode" name="code" value="">
-                    <button type="submit" class="btn btn-sm btn-outline-info">View Statistics</button>
-                </form>
+            <!-- Error Alert -->
+            <div id="errorAlert" class="hidden mt-4 p-3 bg-red-100 text-red-700 rounded-lg" role="alert"></div>
+
+            <!-- Results Section -->
+            <div id="resultSection" class="hidden mt-6 space-y-4">
+                <div class="h-px bg-gray-200"></div>
+
+                <div class="p-4 bg-primary-50 rounded-lg border border-primary-100">
+                    <h5 class="text-sm font-medium text-primary-800 mb-2">Your shortened URL:</h5>
+                    <div class="flex">
+                        <input
+                                type="text"
+                                id="shortenedUrl"
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500"
+                                readonly
+                        >
+                        <button
+                                id="copyButton"
+                                class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition duration-200 flex items-center"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="flex justify-center">
+                    <a id="statsLink" href="#" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 transition duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        View Statistics
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -106,8 +141,8 @@
         const expirationDays = document.getElementById('expirationDays').value;
 
         // Hide any previous results or errors
-        document.getElementById('resultSection').style.display = 'none';
-        document.getElementById('errorAlert').style.display = 'none';
+        document.getElementById('resultSection').classList.add('hidden');
+        document.getElementById('errorAlert').classList.add('hidden');
 
         try {
             const response = await fetch('/shorten', {
@@ -126,23 +161,27 @@
                 const shortenedUrlField = document.getElementById('shortenedUrl');
                 shortenedUrlField.value = data.shortenedUrl;
 
-                // Extract short code for stats form
+                // Extract short code for stats link
+                // Inside your fetch success handler:
                 const shortCode = data.shortenedUrl.split('/').pop();
-                document.getElementById('statsShortCode').value = shortCode;
+                const statsLink = document.getElementById('statsLink');
+                statsLink.href = "/stats/view/" + shortCode;
 
-                console.log('Generated stats code:', shortCode);
+                // Show results section with animation
+                const resultSection = document.getElementById('resultSection');
+                resultSection.classList.remove('hidden');
 
-                // Show results section
-                document.getElementById('resultSection').style.display = 'block';
             } else {
                 const errorText = await response.text();
-                document.getElementById('errorAlert').textContent = 'Error: ' + errorText;
-                document.getElementById('errorAlert').style.display = 'block';
+                const errorAlert = document.getElementById('errorAlert');
+                errorAlert.textContent = 'Error: ' + errorText;
+                errorAlert.classList.remove('hidden');
             }
         } catch (error) {
             console.error('Error:', error);
-            document.getElementById('errorAlert').textContent = 'An error occurred while shortening the URL';
-            document.getElementById('errorAlert').style.display = 'block';
+            const errorAlert = document.getElementById('errorAlert');
+            errorAlert.textContent = 'An error occurred while shortening the URL';
+            errorAlert.classList.remove('hidden');
         }
     });
 
@@ -151,16 +190,21 @@
         shortenedUrlField.select();
         document.execCommand('copy');
 
-        // Change button text temporarily
+        // Change button appearance temporarily
         const copyButton = this;
-        const originalText = copyButton.textContent;
-        copyButton.textContent = 'Copied!';
+        const originalHTML = copyButton.innerHTML;
+        copyButton.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            `;
+        copyButton.classList.add('text-green-600');
+
         setTimeout(() => {
-            copyButton.textContent = originalText;
+            copyButton.innerHTML = originalHTML;
+            copyButton.classList.remove('text-green-600');
         }, 2000);
     });
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

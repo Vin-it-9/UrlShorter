@@ -10,7 +10,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.Optional;
 
-@Path("/stats")
+@Path("/api/stats")
 @Produces(MediaType.APPLICATION_JSON)
 public class StatsController {
 

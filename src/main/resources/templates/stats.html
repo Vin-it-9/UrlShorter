@@ -1,247 +1,188 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>URL Statistics</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f8f9fa;
-            padding-top: 50px;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            300: '#93c5fd',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
         }
-        .stats-card {
-            max-width: 800px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .header h1 {
-            color: #0d6efd;
-        }
-        .url-section {
-            word-break: break-all;
-        }
-        .stat-box {
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
-        .stat-label {
-            font-size: 14px;
-            color: #6c757d;
-        }
-        .stat-value {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .error-message {
-            text-align: center;
-            color: #dc3545;
-            font-size: 18px;
-            margin: 30px 0;
-            display: none;
-        }
-        .loading {
-            text-align: center;
-            margin: 30px 0;
-        }
-        .spinner-border {
-            width: 3rem;
-            height: 3rem;
-        }
-        .user-info {
-            font-size: 12px;
-            color: #6c757d;
-            text-align: right;
-            margin-bottom: 20px;
-        }
-    </style>
+    </script>
 </head>
-<body>
-<div class="container">
-    <div class="stats-card">
-        <div class="user-info">
-            <div>Current Date: 2025-03-24 20:02:41</div>
-            <div>User: Vin-it-9</div>
-        </div>
-
-        <div class="header">
-            <h1>URL Statistics</h1>
-            <p class="text-muted"><span id="shortCode"></span></p>
-        </div>
-
-        <div class="loading" id="loadingIndicator">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
-            </div>
-            <p class="mt-2">Loading statistics...</p>
-        </div>
-
-        <div class="error-message" id="errorMessage">
-            URL not found or has expired
-        </div>
-
-        <div id="statsContent" style="display: none;">
-            <div class="url-section mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Original URL</h5>
-                        <p class="card-text" id="originalUrl"></p>
-                        <a href="#" id="originalUrlLink" target="_blank" class="btn btn-primary btn-sm">Visit Original URL</a>
-                    </div>
+<body class="bg-gray-50 font-sans">
+<div class="min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-xl bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+        <!-- Header -->
+        <div class="p-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+            <div class="flex justify-between items-center">
+                <h1 class="text-2xl font-bold">URL Statistics</h1>
+                <div class="text-xs opacity-80">
+                    <div>Short Code: {shortCode}</div>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="stat-box">
-                        <div class="stat-label">Created On</div>
-                        <div class="stat-value" id="createdAt"></div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="stat-box">
-                        <div class="stat-label">Expires On</div>
-                        <div class="stat-value" id="expiresAt"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="stat-box">
-                        <div class="stat-label">Total Clicks</div>
-                        <div class="stat-value" id="accessCount"></div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="stat-box">
-                        <div class="stat-label">Last Accessed</div>
-                        <div class="stat-value" id="lastAccessedAt"></div>
-                    </div>
-                </div>
-            </div>
+            <p class="mt-2 text-primary-100">Performance metrics for your shortened URL</p>
         </div>
 
-        <div class="mt-4 text-center">
-            <form action="/" method="get">
-                <button type="submit" class="btn btn-outline-secondary">Back to Home</button>
-            </form>
-            <a href="#" id="shortUrlLink" class="btn btn-outline-primary ms-2 mt-2">Open Shortened URL</a>
+        <div class="p-6">
+            <!-- URL Info Card -->
+            <div class="mb-6 p-4 bg-primary-50 rounded-lg border border-primary-100">
+                <h2 class="font-medium text-primary-800 mb-2">Shortened URL</h2>
+                <div class="flex">
+                    <input
+                            type="text"
+                            value="{shortUrlBase}{shortCode}"
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500"
+                            readonly
+                            id="shortUrl"
+                    >
+                    <button
+                            onclick="copyToClipboard('shortUrl')"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition duration-200 flex items-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+                </div>
+
+                <h2 class="font-medium text-primary-800 mt-4 mb-2">Original URL</h2>
+                <div class="flex">
+                    <input
+                            type="text"
+                            value="{originalUrl}"
+                            class="block w-full px-3 py-2 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500 truncate"
+                            readonly
+                            id="originalUrl"
+                    >
+                    <button
+                            onclick="copyToClipboard('originalUrl')"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition duration-200 flex items-center"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <!-- Total Clicks -->
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <div class="p-2 rounded-full bg-blue-100 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Total Clicks</p>
+                            <p class="text-2xl font-bold text-gray-800">{accessCount}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Accessed -->
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <div class="flex items-center">
+                        <div class="p-2 rounded-full bg-green-100 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="text-gray-500 text-sm">Last Accessed</p>
+                            <p class="text-sm font-semibold text-gray-800">{lastAccessedAt}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Card -->
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <h3 class="font-medium text-gray-700 mb-3">Timeline</h3>
+
+                <div class="space-y-3">
+                    <!-- Created -->
+                    <div class="flex">
+                        <div class="flex flex-col items-center mr-4">
+                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                            <div class="w-0.5 h-full bg-blue-200"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-blue-600">Created</p>
+                            <p class="text-sm text-gray-500">{createdAt}</p>
+                        </div>
+                    </div>
+
+                    <!-- Expires -->
+                    <div class="flex">
+                        <div class="flex flex-col items-center mr-4">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-red-600">Expires</p>
+                            <p class="text-sm text-gray-500">{expiresAt}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back button -->
+            <div class="mt-6 flex justify-center">
+                <a href="/" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 transition duration-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                    </svg>
+                    Back to URL Shortener
+                </a>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Get the shortCode from the form parameter
-        const urlParams = new URLSearchParams(window.location.search);
-        const shortCode = urlParams.get('code');
+    function copyToClipboard(elementId) {
+        const el = document.getElementById(elementId);
+        el.select();
+        document.execCommand('copy');
 
-        console.log('State page loaded with code: ' + shortCode);
+        // Show feedback
+        const button = el.nextElementSibling;
+        const originalHTML = button.innerHTML;
+        button.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            `;
 
-        if (!shortCode) {
-            showError("No short code provided");
-            return;
-        }
-
-        document.getElementById('shortCode').textContent = shortCode;
-        document.getElementById('shortUrlLink').href = '/' + shortCode;
-
-        // Handle special cases
-        if (shortCode === "5dR9TM") {
-            console.log('Using hardcoded data for 5dR9TM');
-
-            const hardcodedData = {
-                "shortCode": "5dR9TM",
-                "originalUrl": "https://quarkus.io/",
-                "createdAt": "2025-03-25T00:32:36.809775",
-                "expiresAt": "2025-04-24T00:32:36.809775",
-                "accessCount": 4,
-                "lastAccessedAt": "2025-03-25T00:36:10.399918"
-            };
-
-            // Hide loading indicator
-            document.getElementById('loadingIndicator').style.display = 'none';
-
-            // Fill in the data
-            displayStatsData(hardcodedData);
-            return;
-        }
-
-        // For other codes, fetch data from API
-        fetchStatsData(shortCode);
-    });
-
-    async function fetchStatsData(shortCode) {
-        try {
-            console.log('Fetching data for shortCode: ' + shortCode);
-
-            const response = await fetch('/stats/' + shortCode);
-            console.log('Response status: ' + response.status);
-
-            // Hide loading indicator
-            document.getElementById('loadingIndicator').style.display = 'none';
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Data received:', data);
-
-                displayStatsData(data);
-            } else {
-                showError("URL not found or has expired");
-            }
-        } catch (error) {
-            console.error('Error:', error);
-            showError("An error occurred while loading statistics");
-        }
-    }
-
-    function displayStatsData(data) {
-        // Update all fields
-        document.getElementById('originalUrl').textContent = data.originalUrl;
-        document.getElementById('originalUrlLink').href = data.originalUrl;
-        document.getElementById('createdAt').textContent = formatDate(data.createdAt);
-        document.getElementById('expiresAt').textContent = data.expiresAt ? formatDate(data.expiresAt) : 'Never';
-        document.getElementById('accessCount').textContent = data.accessCount;
-        document.getElementById('lastAccessedAt').textContent = data.lastAccessedAt ? formatDate(data.lastAccessedAt) : 'Never';
-
-        // Show content
-        document.getElementById('statsContent').style.display = 'block';
-        document.getElementById('errorMessage').style.display = 'none';
-
-        console.log('Stats data displayed successfully');
-    }
-
-    function showError(message) {
-        console.error('Error: ' + message);
-
-        // Hide loading indicator
-        document.getElementById('loadingIndicator').style.display = 'none';
-
-        // Show error message
-        document.getElementById('errorMessage').textContent = message;
-        document.getElementById('errorMessage').style.display = 'block';
-        document.getElementById('statsContent').style.display = 'none';
-    }
-
-    // Helper to format date
-    function formatDate(dateString) {
-        if (!dateString) return 'N/A';
-
-        const date = new Date(dateString);
-        return date.toLocaleString();
+        setTimeout(() => {
+            button.innerHTML = originalHTML;
+        }, 2000);
     }
 </script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -27,7 +27,7 @@ public class WebController {
     @Inject
     UrlRepository urlRepository;
 
-    @ConfigProperty(name = "url.shortener.domain", defaultValue = "http://localhost:8080/")
+    @ConfigProperty(name = "url.shortener.domain")
     String domain;
 
     @GET
@@ -37,9 +37,10 @@ public class WebController {
     }
 
     @GET
-    @Path("/stats/view/{shortCode}")
+    @Path("stats/view/{shortCode}")
     @Produces(MediaType.TEXT_HTML)
     public Response viewStats(@PathParam("shortCode") String shortCode) {
+
         Optional<UrlMapping> urlMapping = urlRepository.findByShortCode(shortCode);
 
         if (urlMapping.isPresent()) {
@@ -54,6 +55,7 @@ public class WebController {
                     .data("shortUrlBase", domain);
 
             return Response.ok(template).build();
+
         } else {
             return Response.status(Response.Status.NOT_FOUND)
                     .entity("URL not found or has expired")
