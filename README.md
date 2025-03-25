@@ -126,14 +126,14 @@ For production environments, update the `url.shortener.domain` property to your 
    - Or navigate to `/stats/view/{shortCode}` directly
 
 ## Screenshots
+<img src="https://github.com/user-attachments/assets/f5b3e6b3-8d50-4a1b-85d4-45cefa2fe334" alt="Home Page" width="500" />
 
-![Home Page](https://github.com/user-attachments/assets/f5b3e6b3-8d50-4a1b-85d4-45cefa2fe334)
+<p>The URL shortener homepage</p>
 
-*The URL shortener homepage*
+<img src="https://github.com/user-attachments/assets/a6527b08-df3e-427c-952b-9273502272e5" alt="Statistics Page" width="500" />
 
-![Statistics Page](https://github.com/user-attachments/assets/a6527b08-df3e-427c-952b-9273502272e5)
+<p>The statistics view for a shortened URL</p>
 
-*The statistics view for a shortened URL*
 
 
 ## Building for Production
@@ -149,8 +149,3 @@ The application will be packaged as an uber-jar in `target/quarkus-app/`.
 ```bash
 java -jar target/quarkus-app/quarkus-run.jar
 ```
-
-
-Developed with ❤️ and ☕
-* Date: 2025-03-25
-* Version: 1.0.0
