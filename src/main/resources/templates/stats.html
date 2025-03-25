@@ -6,61 +6,127 @@
     <title>URL Statistics</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
                         primary: {
-                            50: '#eff6ff',
-                            100: '#dbeafe',
-                            200: '#bfdbfe',
-                            300: '#93c5fd',
-                            400: '#60a5fa',
-                            500: '#3b82f6',
-                            600: '#2563eb',
-                            700: '#1d4ed8',
-                            800: '#1e40af',
-                            900: '#1e3a8a',
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                     },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
                 }
             }
         }
     </script>
+    <style>
+        .bg-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239C92AC' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        .floating-delay-1 {
+            animation-delay: 0.5s;
+        }
+
+        .floating-delay-2 {
+            animation-delay: 1s;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gradient-to-br from-slate-100 to-blue-50 bg-pattern min-h-screen font-sans">
+<!-- Background orbs -->
+<div class="fixed inset-0 overflow-hidden -z-10 opacity-70">
+    <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-primary-200 rounded-full opacity-20 mix-blend-multiply blur-3xl floating"></div>
+    <div class="absolute top-1/3 right-1/3 w-72 h-72 bg-purple-200 rounded-full opacity-20 mix-blend-multiply blur-3xl floating floating-delay-1"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-pink-200 rounded-full opacity-20 mix-blend-multiply blur-3xl floating floating-delay-2"></div>
+</div>
+
 <div class="min-h-screen flex items-center justify-center p-4">
-    <div class="w-full max-w-xl bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+    <div data-aos="fade-up" class="w-full max-w-xl bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl overflow-hidden transition-all duration-300 border border-white/50">
         <!-- Header -->
-        <div class="p-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold">URL Statistics</h1>
-                <div class="text-xs opacity-80">
-                    <div>Short Code: {shortCode}</div>
+        <div class="p-6 bg-gradient-to-r from-primary-600 to-primary-700 text-white relative overflow-hidden">
+            <!-- Abstract shapes in header -->
+            <div class="absolute -right-10 -top-10 w-40 h-40 rounded-full bg-white opacity-10"></div>
+            <div class="absolute right-20 bottom-0 w-20 h-20 rounded-full bg-primary-300 opacity-20"></div>
+
+            <div class="flex justify-between items-center relative z-10">
+                <h1 class="text-2xl md:text-3xl font-bold flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    URL Statistics
+                </h1>
+                <div class="text-xs opacity-80 bg-primary-800/30 px-3 py-1 rounded-full">
+                    <div class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
+                        </svg>
+                        {shortCode}
+                    </div>
                 </div>
             </div>
-            <p class="mt-2 text-primary-100">Performance metrics for your shortened URL</p>
+            <p class="mt-2 text-primary-100 max-w-md">Performance metrics and insights for your shortened URL</p>
         </div>
 
-        <div class="p-6">
+        <div class="p-6 md:p-8">
             <!-- URL Info Card -->
-            <div class="mb-6 p-4 bg-primary-50 rounded-lg border border-primary-100">
-                <h2 class="font-medium text-primary-800 mb-2">Shortened URL</h2>
+            <div data-aos="fade-up" class="mb-6 p-5 bg-primary-50 rounded-xl border border-primary-100 shadow-sm transition-all duration-300 hover:shadow-md">
+                <h2 class="font-medium text-primary-800 mb-3 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    Shortened URL
+                </h2>
                 <div class="flex">
                     <input
                             type="text"
                             value="{shortUrlBase}{shortCode}"
-                            class="block w-full px-3 py-2 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500"
+                            class="block w-full px-3 py-3 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500 transition-all duration-300"
                             readonly
                             id="shortUrl"
                     >
                     <button
                             onclick="copyToClipboard('shortUrl')"
-                            class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition duration-200 flex items-center"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition-all duration-300 flex items-center hover:text-primary-600"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -68,64 +134,104 @@
                     </button>
                 </div>
 
-                <h2 class="font-medium text-primary-800 mt-4 mb-2">Original URL</h2>
+                <h2 class="font-medium text-primary-800 mt-4 mb-2 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-primary-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                    Original URL
+                </h2>
                 <div class="flex">
                     <input
                             type="text"
                             value="{originalUrl}"
-                            class="block w-full px-3 py-2 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500 truncate"
+                            class="block w-full px-3 py-3 border border-gray-300 rounded-l-lg bg-white focus:ring-primary-500 focus:border-primary-500 truncate transition-all duration-300"
                             readonly
                             id="originalUrl"
                     >
                     <button
                             onclick="copyToClipboard('originalUrl')"
-                            class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition duration-200 flex items-center"
+                            class="px-4 py-2 bg-gray-100 text-gray-700 border border-l-0 border-gray-300 rounded-r-lg hover:bg-gray-200 transition-all duration-300 flex items-center hover:text-primary-600"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
                     </button>
                 </div>
+
+                <!-- Copy success messages -->
+                <div id="shortUrlCopySuccess" class="hidden mt-2 text-xs text-green-600 flex items-center animate-fade-in">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Copied to clipboard!
+                </div>
+                <div id="originalUrlCopySuccess" class="hidden mt-2 text-xs text-green-600 flex items-center animate-fade-in">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Copied to clipboard!
+                </div>
             </div>
 
             <!-- Statistics Grid -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+            <div data-aos="fade-up" data-aos-delay="100" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <!-- Total Clicks -->
-                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <div class="p-5 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]">
                     <div class="flex items-center">
-                        <div class="p-2 rounded-full bg-blue-100 mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="p-3 rounded-full bg-blue-100 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122" />
                             </svg>
                         </div>
                         <div>
                             <p class="text-gray-500 text-sm">Total Clicks</p>
-                            <p class="text-2xl font-bold text-gray-800">{accessCount}</p>
+                            <div class="flex items-end">
+                                <p class="text-3xl font-bold text-gray-800">{accessCount}</p>
+                                <p class="ml-2 text-xs text-green-600 font-medium">clicks</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Simple visualization -->
+                    <div class="mt-3">
+                        <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-blue-500 rounded-full" style="width: 100%"></div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Last Accessed -->
-                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+                <div class="p-5 bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-[1.02]">
                     <div class="flex items-center">
-                        <div class="p-2 rounded-full bg-green-100 mr-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <div class="p-3 rounded-full bg-green-100 mr-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                         </div>
                         <div>
                             <p class="text-gray-500 text-sm">Last Accessed</p>
-                            <p class="text-sm font-semibold text-gray-800">{lastAccessedAt}</p>
+                            <p class="text-sm font-medium text-gray-800">{lastAccessedAt}</p>
                         </div>
+                    </div>
+
+                    <!-- Health indicator -->
+                    <div class="mt-3 flex items-center">
+                        <span class="inline-block w-2 h-2 bg-green-500 rounded-full mr-2"></span>
+                        <span class="text-xs text-gray-600">Link is active and healthy</span>
                     </div>
                 </div>
             </div>
 
             <!-- Timeline Card -->
-            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
-                <h3 class="font-medium text-gray-700 mb-3">Timeline</h3>
+            <div data-aos="fade-up" data-aos-delay="200" class="p-5 bg-white rounded-xl border border-gray-200 shadow-sm mb-6">
+                <h3 class="font-medium text-gray-700 mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Timeline
+                </h3>
 
-                <div class="space-y-3">
+                <div class="space-y-4">
                     <!-- Created -->
                     <div class="flex">
                         <div class="flex flex-col items-center mr-4">
@@ -133,8 +239,16 @@
                             <div class="w-0.5 h-full bg-blue-200"></div>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-blue-600">Created</p>
+                            <p class="text-sm font-medium text-blue-600 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                </svg>
+                                Created
+                            </p>
                             <p class="text-sm text-gray-500">{createdAt}</p>
+
+                            <!-- Extra detail -->
+                            <p class="text-xs text-gray-400 mt-1">Link was created and is active</p>
                         </div>
                     </div>
 
@@ -144,16 +258,24 @@
                             <div class="w-3 h-3 bg-red-500 rounded-full"></div>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-red-600">Expires</p>
+                            <p class="text-sm font-medium text-red-600 flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Expires
+                            </p>
                             <p class="text-sm text-gray-500">{expiresAt}</p>
+
+                            <!-- Extra detail -->
+                            <p class="text-xs text-gray-400 mt-1">Link will no longer redirect after this date</p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Back button -->
-            <div class="mt-6 flex justify-center">
-                <a href="/" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 transition duration-200">
+            <div data-aos="fade-up" data-aos-delay="300" class="flex justify-center">
+                <a href="/" class="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-700 bg-primary-50 border border-primary-200 rounded-lg hover:bg-primary-100 transition-all duration-300 hover:shadow transform hover:scale-[1.02] active:scale-[0.98]">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                     </svg>
@@ -161,10 +283,24 @@
                 </a>
             </div>
         </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-3 bg-gray-50 text-xs text-center text-gray-500">
+            A modern & secure URL shortening service
+        </div>
     </div>
 </div>
 
 <script>
+    // Initialize AOS animations
+    document.addEventListener('DOMContentLoaded', function() {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-out',
+            once: true
+        });
+    });
+
     function copyToClipboard(elementId) {
         const el = document.getElementById(elementId);
         el.select();
@@ -172,15 +308,15 @@
 
         // Show feedback
         const button = el.nextElementSibling;
-        const originalHTML = button.innerHTML;
-        button.innerHTML = `
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                </svg>
-            `;
+        button.classList.add('text-green-600', 'bg-green-50', 'border-green-200');
+
+        // Show the appropriate success message
+        const successElement = elementId === 'shortUrl' ? 'shortUrlCopySuccess' : 'originalUrlCopySuccess';
+        document.getElementById(successElement).classList.remove('hidden');
 
         setTimeout(() => {
-            button.innerHTML = originalHTML;
+            button.classList.remove('text-green-600', 'bg-green-50', 'border-green-200');
+            document.getElementById(successElement).classList.add('hidden');
         }, 2000);
     }
 </script>
