@@ -127,10 +127,12 @@ For production environments, update the `url.shortener.domain` property to your 
 
 ## Screenshots
 
-![Home Page](https://i.imgur.com/example-home.png)
+![Home Page]([https://i.imgur.com/example-home.png](https://github.com/user-attachments/assets/f5b3e6b3-8d50-4a1b-85d4-45cefa2fe334))
+
 *The URL shortener homepage*
 
-![Statistics Page](https://i.imgur.com/example-stats.png)
+![Statistics Page]([https://i.imgur.com/example-stats.png](https://github.com/user-attachments/assets/a6527b08-df3e-427c-952b-9273502272e5
+))
 *The statistics view for a shortened URL*
 
 ## Building for Production
