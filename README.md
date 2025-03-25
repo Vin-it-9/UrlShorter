@@ -31,7 +31,7 @@ A modern, high-performance URL shortening service built with Quarkus and Tailwin
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Vin-it-9/url-shortener.git
+   git clone https://github.com/Vin-it-9/UrlShorter.git
    cd url-shortener
    ```
 
