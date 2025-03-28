@@ -306,11 +306,9 @@
         el.select();
         document.execCommand('copy');
 
-        // Show feedback
         const button = el.nextElementSibling;
         button.classList.add('text-green-600', 'bg-green-50', 'border-green-200');
 
-        // Show the appropriate success message
         const successElement = elementId === 'shortUrl' ? 'shortUrlCopySuccess' : 'originalUrlCopySuccess';
         document.getElementById(successElement).classList.remove('hidden');
 

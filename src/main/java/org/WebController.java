@@ -36,8 +36,8 @@ public class WebController {
 
     @GET
     @Produces(MediaType.TEXT_HTML)
-    public Response home() {
-        return Response.ok(index.instance()).build();
+    public TemplateInstance home() {
+        return index.instance();
     }
 
     @GET
@@ -49,7 +49,6 @@ public class WebController {
         if (urlMapping.isPresent()) {
             UrlMapping mapping = urlMapping.get();
 
-            // Format dates
             String formattedCreatedAt = formatDateTime(mapping.createdAt);
             String formattedExpiresAt = formatDateTime(mapping.expiresAt);
             String formattedLastAccessedAt = mapping.lastAccessedAt != null ?
@@ -63,10 +62,11 @@ public class WebController {
                     .data("lastAccessedAt", formattedLastAccessedAt)
                     .data("shortUrlBase", domain);
 
-            return Response.ok(template).build();
+            return Response.ok(template).type(MediaType.TEXT_HTML).build();
         } else {
             return Response.status(Response.Status.NOT_FOUND)
-                    .entity("URL not found or has expired")
+                    .entity("<html><body><h1>Not Found</h1><p>URL not found or has expired</p></body></html>")
+                    .type(MediaType.TEXT_HTML)
                     .build();
         }
     }
